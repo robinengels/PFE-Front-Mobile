@@ -1,23 +1,28 @@
 import React, { useState } from 'react';
-import './App.css';
 import firebase from 'services/firebase_init'
 import App from 'components/App/App'
-import axios from 'axios'
+import citizenServices from 'services/citizen'
 const AppContainer = () => {
+  const[isScanning,setScanning] = useState(false)
+  const[citizenInfo,setCitizenInfo] = useState({})
+  const[notification,setNotification] = useState("")
 
-  const[result,setResult] = useState("No QrCode scanned !")
+  const storage = window.localStorage
 
-  const sendTokenToServer = (data) => {
-    const sentObject = {
-      First_name : null,
-      Last_name : null,
-      tokenFirebase : data,
-      Is_Positive : false
-    }
-    axios.post("https://pfe-backend-dev.azurewebsites.net/api/Citizens"
-                ,sentObject).then(response => {
-                  console.log(response)
-                })
+  const registerToServer = (token) => {
+    console.log("Registering as new citizen")
+    citizenServices.register(token).then(resp => {
+      storage.setItem("UID",resp.citizenID)
+      setCitizenInfo(resp)
+    })
+  }
+
+  const loginToServer = (token,uid) => {
+    console.log("Logging in as exsisting citizen")
+    citizenServices.login(token,uid).then(resp => {
+      console.log(resp)
+      setCitizenInfo(resp)
+    })
   }
 
   const initNotifications = () => {
@@ -29,16 +34,21 @@ const AppContainer = () => {
       return msg.getToken();
     }).then((data)=>{
       console.log("token",data)
-      //sendTokenToServer(data)
+      if(storage.getItem("UID") == null){
+        registerToServer(data)
+      }
+      else{
+        loginToServer(data)
+      }
     })
 
     //Init the onMessage to show notifications
     msg.onMessage((payload) => {
       console.log("Message received",payload)
-      if (Notification.permission == 'granted') {
+      if (Notification.permission === 'granted') {
         navigator.serviceWorker.getRegistration().then(function(reg) {
           console.log("Showing a notification")
-          reg.showNotification('Hello world!');
+          reg.showNotification(payload.data.body);
         });
       }
     })
@@ -53,13 +63,17 @@ const AppContainer = () => {
   const handleScan = (data) => {
     if(data){
       console.log("Handle scan",data)
-      setResult(data)
+      setScanning(false)
+      citizenServices.postQrCode(data,storage.getItem("UID")).then(()=>{
+        setNotification("QrCode was correctly scanned and registered !")
+        setTimeout(()=>{ setNotification("")},10000)
+      })
     }
   }
 
   return (
-    <App handleScan={handleScan} handleError={handleError} result = {result}/>
+    <App handleScan={handleScan} handleError={handleError} citizenInfo = {citizenInfo} setScanning={setScanning} isScanning={isScanning} notif={notification}/>
   );
 }
 
-export default App;
+export default AppContainer;
