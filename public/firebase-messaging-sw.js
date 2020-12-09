@@ -21,16 +21,13 @@ importScripts('https://www.gstatic.com/firebasejs/8.1.1/firebase-messaging.js');
 // messages.
 const messaging = firebase.messaging();
 
-
 messaging.onBackgroundMessage(function(payload) {
     console.log('[firebase-messaging-sw.js] Received background message ', payload);
     // Customize notification here
-    const notificationTitle = payload.message.notification.title;
+    const notificationTitle = payload.notification.title;
     const notificationOptions = {
-      body: payload.message.notification.body,
-      icon: '/firebase-logo.png'
+      body: payload.notification.body
     };
-  
-    self.registration.showNotification(notificationTitle,
-      notificationOptions);
+    //self.registration.showNotification(notificationTitle,
+     // notificationOptions);
   });

@@ -1,16 +1,11 @@
-.citizenContent{
+.buttonContainer{
     margin: 5px;
     padding: 5px;
     padding-top: 7px;
-    border-color: #00a35a;
-    background-color: #00a35a;
+    border-color:grey;
+    background-color: grey;
     border-width: 2px;
     border-style: solid;
     color: white;
     border-radius: 2px;
-}
-
-.citizenInfo{
-    margin: auto;
-    text-align: center;
 }

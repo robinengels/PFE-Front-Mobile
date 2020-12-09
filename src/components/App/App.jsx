@@ -2,13 +2,12 @@ import React from 'react'
 import './App.css'
 import Title from 'components/Title/Title'
 import QrReader from 'react-qr-reader'
-import Button from 'components/Button/Button'
+import MaterialButton from 'components/MaterialButton/MaterialButton'
 import CitizenInfo from 'components/CitizenInfo/CitizenInfo'
 import Notification from 'components/Notification/Notification'
-import RegisterCitizenInfo from 'components/RegisterCitizenInfo/RegisterCitizenInfo'
+import ButtonContainer from 'components/ButtonContainer/ButtonContainer'
 
 const App = ({handleScan,handleError,citizenInfo,setScanning,isScanning,notif}) => {
-  console.log("Notif",notif)
   if(isScanning){
   return (
     <div>
@@ -23,19 +22,20 @@ const App = ({handleScan,handleError,citizenInfo,setScanning,isScanning,notif}) 
             style={{ width: '100%' }}
         />
         </div>
-
+        <MaterialButton text="Annuler" onClick={() => setScanning(false)}/>
     </div>
   );
   }
   else{
     return(
-        <div>
-        <Title title="BlockCovid"/>
-        <Notification text={notif}/>
-        <Button text="Scan a Code" onClick={() => setScanning(true)}/>
-        <CitizenInfo info={citizenInfo}/>
-        <RegisterCitizenInfo/>
+      <div className="container">
+        <div className="centerContainer">
+          <Title title="BlockCovid"/>
+          <Notification text={notif}/>
+          <ButtonContainer text="Scanner un QrCode" setScanning={setScanning}/>
+          <CitizenInfo info={citizenInfo}/>
         </div>
+      </div>
     )
   }
 }

@@ -1,8 +1,9 @@
 import React from 'react'
+import './Notification.css'
 
 const Notification = ({text}) => {
     return(
-        <div>
+        <div className="notification">
             <p>{text}</p>
         </div>
     )

@@ -1,6 +1,14 @@
 import axios from 'axios'
 const baseURL = "https://pfe-backend-dev.azurewebsites.net/api"
 
+const getCitizen = (id) => {
+  const request = axios.get(baseURL+`/Citizens/${id}`)
+  return request.then(response => {
+    return response.data
+  })
+}
+
+
 const register = (token) => {
     const sentObject = {
         First_name : null,
@@ -34,8 +42,22 @@ const postQrCode = (qrId,id) => {
     return request.then(response => {return response})
 }
 
+const updateCitizen = (id,fn,ln) => {
+  const sentObject = {
+    citizenID : id,
+    First_name : fn,
+    Last_name : ln,
+    tokenFirebase : null,
+    Is_Positive : false
+  }
+  const request = axios.put(baseURL+"/Citizens",sentObject)
+  return request.then(response => {return response})
+}
+
 export default {
     register,
     login,
-    postQrCode
+    postQrCode,
+    updateCitizen,
+    getCitizen
 }

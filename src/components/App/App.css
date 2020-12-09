@@ -1,15 +1,10 @@
-.title {
-    text-align: center;
-    margin: auto;
+
+.centerContainer{
+    display: inline-block;
 }
 
-.button {
+.container{
     margin: auto;
-    padding-top: 2px;
     text-align: center;
 }
 
-#QrReader {
-    margin: auto;
-    align-content: center;
-}

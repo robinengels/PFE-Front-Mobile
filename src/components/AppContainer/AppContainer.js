@@ -2,12 +2,29 @@ import React, { useState } from 'react';
 import firebase from 'services/firebase_init'
 import App from 'components/App/App'
 import citizenServices from 'services/citizen'
+import InstallApp from 'components/InstallApp/InstallApp'
+
 const AppContainer = () => {
   const[isScanning,setScanning] = useState(false)
   const[citizenInfo,setCitizenInfo] = useState({})
   const[notification,setNotification] = useState("")
+  const[showInstall,setShowInstall] = useState(false)
+  const[installPrompt,setInstallPrompt] = useState(null)
 
   const storage = window.localStorage
+  var triggerEvent;
+
+
+  window.addEventListener('beforeinstallprompt',(e)=>{
+    triggerEvent = e;
+    console.log("Before Install prompt")
+    
+  })
+
+  const showInstallPromition = (prompt) => {
+    setShowInstall(true)
+    setInstallPrompt(prompt)
+  }
 
   const registerToServer = (token) => {
     console.log("Registering as new citizen")
@@ -25,6 +42,16 @@ const AppContainer = () => {
     })
   }
 
+  const updateCitizenInfo = () => {
+    let id = storage.getItem("UID")
+    if(id != null){
+      console.log("Updating citizen info")
+      citizenServices.getCitizen(id).then(data => {
+        setCitizenInfo(data)
+      })
+    }    
+  }
+
   const initNotifications = () => {
 
     const msg = firebase.messaging();
@@ -38,8 +65,11 @@ const AppContainer = () => {
         registerToServer(data)
       }
       else{
-        loginToServer(data)
+        loginToServer(data,storage.getItem("UID"))
+        updateCitizenInfo()
       }
+    }).then(() => {
+      //showInstallPromition(triggerEvent)
     })
 
     //Init the onMessage to show notifications
@@ -48,7 +78,12 @@ const AppContainer = () => {
       if (Notification.permission === 'granted') {
         navigator.serviceWorker.getRegistration().then(function(reg) {
           console.log("Showing a notification")
-          reg.showNotification(payload.data.body);
+          const notificationTitle = payload.notification.title;
+          const notificationOptions = {
+            body: payload.notification.body
+          };
+          reg.showNotification(notificationTitle,notificationOptions);
+          updateCitizenInfo()
         });
       }
     })
@@ -67,13 +102,22 @@ const AppContainer = () => {
       citizenServices.postQrCode(data,storage.getItem("UID")).then(()=>{
         setNotification("QrCode was correctly scanned and registered !")
         setTimeout(()=>{ setNotification("")},10000)
-      })
+      }).then( () => {updateCitizenInfo()}
+      )
     }
   }
 
-  return (
-    <App handleScan={handleScan} handleError={handleError} citizenInfo = {citizenInfo} setScanning={setScanning} isScanning={isScanning} notif={notification}/>
-  );
+  if(!showInstall){
+    return (
+      <App handleScan={handleScan} handleError={handleError} citizenInfo = {citizenInfo} setScanning={setScanning} isScanning={isScanning} notif={notification}/>
+    );
+  }
+  else{
+    return(
+      <InstallApp installPrompt={installPrompt} setShowInstall={setShowInstall} citizen={citizenInfo}/>
+    )
+  }
+
 }
 
 export default AppContainer;
