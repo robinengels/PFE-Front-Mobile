@@ -5,7 +5,6 @@ import './Title.css'
 
 const useStyles = makeStyles({
   root: {
-    width: '100%',
     color : 'white',
   },
 });

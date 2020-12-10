@@ -11,8 +11,6 @@ const useStyles = makeStyles({
 const CitizenHealth = ({isPositive,isExposed}) => {
     const classes = useStyles();
 
-    console.log("Info",isExposed)
-
     if(isPositive){
         return(
             <div className={classes.root}>
@@ -26,7 +24,7 @@ const CitizenHealth = ({isPositive,isExposed}) => {
         return(
             <div className={classes.root}>
                 <Typography variant="h6" gutterBottom>
-                    Vous avez été exposé metter vous en quarataine !
+                    Vous avez été exposé mettez-vous en quarantaine !
                 </Typography>
             </div>
         )
@@ -35,7 +33,7 @@ const CitizenHealth = ({isPositive,isExposed}) => {
         return(
             <div className={classes.root}>
                 <Typography variant="h6" gutterBottom>
-                    Pas d'exposition au COVID-19 jusqu'à présent
+                    Pas d'exposition au COVID-19 jusqu'à présent !
                 </Typography>
             </div>
         )

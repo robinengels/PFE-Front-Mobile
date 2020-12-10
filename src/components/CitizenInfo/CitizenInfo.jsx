@@ -1,35 +1,29 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import CitizenHealth from 'components/CitizenHealth/CitizenHealth'
-import Container from '@material-ui/core/Container'
+import AppContext from 'contexts/AppContext'
 import './CitizenInfo.css'
 
-const CitizenInfo = ({info}) => {
+const CitizenInfo = () => {
+    const {citizenInfo} = useContext(AppContext)
 
     var color = "#00a35a"
-    if(info.is_Positive) color = "red"
-    else if(info.is_Exposed) color = "orange"
-    
-    
+    if(citizenInfo.is_Positive) color = "red"
+    else if(citizenInfo.is_Exposed) color = "orange"
 
-    if(info.first_Name != null){
-        return (
-            <div className="citizenInfo">
-                <div className="citizenContent">
-                    <p>Hello {info.first_Name} {info.last_Name}</p>
-                    <CitizenHealth isPositive={info.is_Positive} isExposed={info.is_Exposed}/> 
-                </div>
-            </div>
-        )
+    var name
+    if(citizenInfo.first_Name != null){
+        name = <p>Hello {citizenInfo.first_Name} {citizenInfo.last_Name}</p>
     }
-    else{
-        return(
-            <div className="citizenInfo">
-                <div className="citizenContent" style={{backgroundColor:color, borderColor:color}}>
-                <CitizenHealth isPositive={info.is_Positive} isExposed={info.is_Exposed}/>
-                </div>
+
+    return(
+        <div className="citizenInfo">
+            <div className="citizenContent" style={{backgroundColor:color, borderColor:color}}>
+                {name}
+                <CitizenHealth isPositive={citizenInfo.is_Positive} isExposed={citizenInfo.is_Exposed}/>
             </div>
-        )
-    }
+        </div>
+    )
+    
 }
 
 export default CitizenInfo

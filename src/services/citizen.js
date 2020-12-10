@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseURL = "https://pfe-backend-dev.azurewebsites.net/api"
+const baseURL = "https://pfe-backend-prod.azurewebsites.net/api"
 
 const getCitizen = (id) => {
   const request = axios.get(baseURL+`/Citizens/${id}`)

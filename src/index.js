@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import AppContainer from './components/AppContainer/AppContainer';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import {ProviderWrapper as AppProviderWrapper} from "contexts/AppContext"
 
 ReactDOM.render(
   <React.StrictMode>
-    <AppContainer/>
+    <AppProviderWrapper>
+      <AppContainer/>
+    </AppProviderWrapper>
   </React.StrictMode>,
   document.getElementById('root')
 );

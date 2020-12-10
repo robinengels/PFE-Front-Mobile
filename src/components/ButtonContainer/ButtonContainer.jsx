@@ -2,11 +2,11 @@ import MaterialButton from 'components/MaterialButton/MaterialButton'
 import React from 'react'
 import './ButtonContainer.css'
 
-const ButtonContainer = ({text,setScanning}) => {
+const ButtonContainer = ({text,buttonText,onClick}) => {
     return(
         <div className="buttonContainer">
-            <p>Scanner un QrCode a chaque fois que vous rentrez dans un établissement</p>
-            <MaterialButton text={text} onClick={() => setScanning(true)}/>
+            <p>{text}</p>
+            <MaterialButton text={buttonText} onClick={onClick}/>
         </div>
     )
 }
