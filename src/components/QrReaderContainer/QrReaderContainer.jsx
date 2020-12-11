@@ -17,9 +17,14 @@ const QrReaderContainer = () => {
           console.log("Handle scan",data)
           setScanning(false)
           citizenServices.postQrCode(data,storage.getItem("UID")).then(()=>{
-            setNotification("QrCode was correctly scanned and registered !")
+            setNotification("Le QrCode a correctement été scanné !")
             setTimeout(()=>{ setNotification("")},10000)
           }).then( () => {updateCitizenInfo()}
+          ).catch(
+            (err) => {
+              console.error(err)
+              setNotification("Le QrCode est incorrect !")
+            }
           )
         }
       }
